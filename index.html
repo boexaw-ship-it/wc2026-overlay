@@ -5,314 +5,178 @@
 <title>WC2026 Overlay — DoePhaGyi</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* ── RESET ── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --black:  #000000;
-  --white:  #FFFFFF;
-  --green:  #76FF03;
-  --gray:   #0d0d0d;
-  --dim:    rgba(0,0,0,0.0);
-}
-html,body{
-  width:1920px; height:1080px;
-  overflow:hidden;
-  background:transparent;
-  font-family:'Barlow Condensed',sans-serif;
-}
+:root{--black:#000;--white:#fff;--green:#76FF03;--gray:#0d0d0d;}
+html,body{width:1920px;height:1080px;overflow:hidden;background:transparent;font-family:'Barlow Condensed',sans-serif;}
 #canvas{position:relative;width:1920px;height:1080px;background:transparent;}
 
-/* ══════════════════════════════
-   TOP BAR
-══════════════════════════════ */
+/* ── TOP BAR ── */
 #topbar{
-  position:absolute;top:0;left:0;right:0;height:88px;
+  position:absolute;top:0;left:0;right:0;height:90px;
   background:var(--black);
   display:flex;align-items:center;justify-content:center;
 }
-
-/* Team blocks */
-.team-block{
-  display:flex;align-items:center;gap:18px;
-  width:560px;padding:0 28px;
-}
+.team-block{display:flex;align-items:center;gap:16px;width:540px;padding:0 28px;}
 .team-block.right{flex-direction:row-reverse;}
-
-.flag-img{
-  width:72px;height:48px;
-  border:1.5px solid rgba(255,255,255,0.1);
-  border-radius:3px;
-  object-fit:cover;
-  flex-shrink:0;
-  background:#111;
-}
-.flag-fallback{
-  width:72px;height:48px;
-  border:1.5px solid rgba(255,255,255,0.1);
-  border-radius:3px;
-  background:#1a1a1a;
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;letter-spacing:1px;
-  color:rgba(255,255,255,0.3);text-transform:uppercase;
-  flex-shrink:0;
-}
-.team-name{
-  font-size:36px;font-weight:900;
-  letter-spacing:2px;color:var(--white);
-  text-transform:uppercase;line-height:1;
-}
+.flag-img{width:72px;height:48px;border:1.5px solid rgba(255,255,255,0.1);border-radius:3px;object-fit:cover;flex-shrink:0;background:#111;}
+.team-name{font-size:38px;font-weight:900;letter-spacing:2px;color:var(--white);text-transform:uppercase;line-height:1;}
 .team-block.right .team-name{text-align:right;}
 
-/* Center score */
-#center{
-  width:200px;flex-shrink:0;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-}
-#scoreline{display:flex;align-items:center;gap:6px;}
-.snum{
-  font-size:58px;font-weight:900;color:var(--white);
-  line-height:1;min-width:42px;text-align:center;
-}
-.ssep{font-size:44px;font-weight:300;color:rgba(255,255,255,0.2);line-height:1;}
-#period{
-  font-size:13px;font-weight:700;letter-spacing:3px;
-  color:var(--green);text-transform:uppercase;margin-top:2px;
-}
-.ldot{
-  display:inline-block;width:7px;height:7px;
-  border-radius:50%;background:var(--green);
-  margin-right:5px;
-  animation:blink 1.2s ease-in-out infinite;
-}
+/* Center */
+#center{width:300px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+#scoreline{display:flex;align-items:center;gap:8px;}
+.snum{font-size:60px;font-weight:900;color:var(--white);line-height:1;min-width:44px;text-align:center;}
+.ssep{font-size:46px;font-weight:300;color:rgba(255,255,255,0.2);}
+#period-wrap{display:flex;align-items:center;gap:6px;margin-top:2px;}
+.ldot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 1.2s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.1}}
+#ptext{font-size:13px;font-weight:700;letter-spacing:3px;color:var(--green);text-transform:uppercase;}
 
-/* ══════════════════════════════
-   FORMATION + SCORER STRIP
-══════════════════════════════ */
+/* ── GOAL EVENTS under score ── */
+#goal-events{
+  display:flex;gap:32px;justify-content:center;
+  margin-top:3px;
+  min-height:16px;
+}
+.goal-side{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:220px;}
+.gevt{font-size:12px;font-weight:600;color:rgba(255,255,255,0.55);letter-spacing:0.5px;white-space:nowrap;}
+.gevt::before{content:"⚽ ";}
+
+/* ── FORMATION + SCORER STRIP ── */
 #infostrip{
-  position:absolute;top:88px;left:0;right:0;
-  background:#0a0a0a;
-  border-bottom:1px solid rgba(255,255,255,0.05);
-  display:flex;align-items:stretch;
-  min-height:32px;
+  position:absolute;top:90px;left:0;right:0;height:34px;
+  background:#090909;border-bottom:1px solid rgba(255,255,255,0.05);
+  display:flex;align-items:center;
 }
-.info-side{
-  width:860px;display:flex;align-items:center;
-  padding:0 28px;gap:14px;
-}
-.info-side.right{flex-direction:row-reverse;}
-.form-tag{
-  font-size:14px;font-weight:800;color:var(--white);
-  letter-spacing:1px;flex-shrink:0;
-  background:rgba(255,255,255,0.06);
-  padding:2px 10px;
-}
-.scorer-list{
-  font-size:12px;font-weight:600;color:rgba(255,255,255,0.45);
-  letter-spacing:1px;white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis;
-  display:flex;align-items:center;gap:10px;
-}
-.scorer-item::before{content:"⚽ ";}
-.info-divider{
-  width:200px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:9px;font-weight:700;letter-spacing:4px;
-  color:rgba(255,255,255,0.12);text-transform:uppercase;
-}
+.iside{width:760px;display:flex;align-items:center;gap:12px;padding:0 28px;}
+.iside.right{flex-direction:row-reverse;}
+.form-tag{font-size:14px;font-weight:800;color:var(--white);letter-spacing:1px;background:rgba(255,255,255,0.06);padding:2px 10px;flex-shrink:0;}
+.idivider{flex:1;text-align:center;font-size:9px;font-weight:700;letter-spacing:4px;color:rgba(255,255,255,0.1);text-transform:uppercase;}
 
-/* ══════════════════════════════
-   CAMERA FRAME — bottom right
-══════════════════════════════ */
+/* ── CAMERA FRAME — bottom-right ── */
 #cam-frame{
-  position:absolute;
-  bottom:108px;right:28px;
-  width:364px;height:205px;
+  position:absolute;bottom:112px;right:28px;
+  width:420px;height:237px;
 }
-#cam-frame::before,#cam-frame::after,
-#cami::before,#cami::after{
-  content:'';position:absolute;
-  width:22px;height:22px;
+#cam-frame::before,#cam-frame::after,#cami::before,#cami::after{
+  content:'';position:absolute;width:22px;height:22px;
   border-color:var(--green);border-style:solid;
 }
-#cam-frame::before{top:0;left:0;  border-width:3px 0 0 3px;}
-#cam-frame::after {top:0;right:0; border-width:3px 3px 0 0;}
+#cam-frame::before{top:0;left:0;border-width:3px 0 0 3px;}
+#cam-frame::after{top:0;right:0;border-width:3px 3px 0 0;}
 #cami{position:absolute;inset:0;}
-#cami::before{bottom:0;left:0; border-width:0 0 3px 3px;}
-#cami::after {bottom:0;right:0;border-width:0 3px 3px 0;}
+#cami::before{bottom:0;left:0;border-width:0 0 3px 3px;}
+#cami::after{bottom:0;right:0;border-width:0 3px 3px 0;}
 #cam-border{position:absolute;inset:0;border:1px solid rgba(255,255,255,0.06);}
-#cam-live{
-  position:absolute;top:7px;left:8px;
-  background:var(--green);color:var(--black);
-  font-size:10px;font-weight:900;letter-spacing:2px;
-  padding:2px 8px;text-transform:uppercase;
-}
+#cam-live{position:absolute;top:7px;left:8px;background:var(--green);color:var(--black);font-size:10px;font-weight:900;letter-spacing:2px;padding:2px 8px;}
 
-/* ══════════════════════════════
-   LINEUP PANELS — left of cam
-══════════════════════════════ */
+/* ── LINEUP PANELS — left of cam ── */
 #lineup-wrap{
-  position:absolute;
-  bottom:108px;right:400px;
-  display:flex;align-items:flex-end;gap:5px;
+  position:absolute;bottom:112px;right:456px;
+  display:flex;align-items:flex-end;gap:6px;
 }
 .lp{
-  position:relative;
-  width:165px;height:220px;
-  background:#0a0a0a;
-  border:1px solid rgba(255,255,255,0.06);
+  position:relative;width:190px;height:260px;
+  background:#0a0a0a;border:1px solid rgba(255,255,255,0.07);
   overflow:hidden;flex-shrink:0;
 }
-/* bracket corners */
 .lp::before,.lp::after,.lpb::before,.lpb::after{
-  content:'';position:absolute;
-  width:14px;height:14px;
+  content:'';position:absolute;width:14px;height:14px;
   border-color:var(--green);border-style:solid;z-index:3;
 }
-.lp::before{top:0;left:0; border-width:2px 0 0 2px;}
-.lp::after {top:0;right:0;border-width:2px 2px 0 0;}
+.lp::before{top:0;left:0;border-width:2px 0 0 2px;}
+.lp::after{top:0;right:0;border-width:2px 2px 0 0;}
 .lpb{position:absolute;inset:0;pointer-events:none;}
-.lpb::before{bottom:22px;left:0; border-width:0 0 2px 2px;}
-.lpb::after {bottom:22px;right:0;border-width:0 2px 2px 0;}
+.lpb::before{bottom:24px;left:0;border-width:0 0 2px 2px;}
+.lpb::after{bottom:24px;right:0;border-width:0 2px 2px 0;}
 .lp img{width:100%;height:100%;object-fit:cover;display:block;}
-.lp-placeholder{
-  width:100%;height:100%;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:6px;color:rgba(255,255,255,0.15);
-}
-.lp-placeholder .ico{font-size:24px;}
-.lp-placeholder .lptxt{
-  font-size:9px;font-weight:700;
-  letter-spacing:2px;text-transform:uppercase;text-align:center;
-}
-.lp-label{
-  position:absolute;bottom:0;left:0;right:0;
-  background:rgba(0,0,0,0.8);
-  font-size:10px;font-weight:700;letter-spacing:2px;
-  color:rgba(255,255,255,0.45);text-transform:uppercase;
-  text-align:center;padding:4px 0;z-index:2;
-}
+.lp-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(255,255,255,0.15);}
+.lp-ph .ico{font-size:26px;}
+.lp-ph .lptxt{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:center;}
+.lp-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.82);font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.45);text-transform:uppercase;text-align:center;padding:4px 0;z-index:2;}
 
-/* ══════════════════════════════
-   BOTTOM BAR
-══════════════════════════════ */
+/* ── BOTTOM BAR ── */
 #bottombar{
-  position:absolute;bottom:0;left:0;right:0;height:108px;
+  position:absolute;bottom:0;left:0;right:0;height:112px;
   background:var(--black);
   display:flex;align-items:center;
-  justify-content:space-between;
-  padding:0 28px;
+  padding:0 28px;gap:0;
 }
 
 /* Logo */
-#logo-wrap{display:flex;align-items:center;gap:13px;flex-shrink:0;}
-#logo-circle{
-  width:76px;height:76px;border-radius:50%;
-  border:2px solid var(--green);
-  overflow:hidden;background:#000;
-  display:flex;align-items:center;justify-content:center;
+#logo-wrap{display:flex;align-items:center;gap:13px;flex-shrink:0;width:280px;}
+#logo-circle{width:78px;height:78px;border-radius:50%;border:2px solid var(--green);overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+#logo-circle img{width:100%;height:100%;object-fit:cover;display:block;}
+.logo-fb{display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.logo-fb span{font-size:15px;font-weight:900;line-height:1.1;color:var(--green);}
+.logo-fb span.w{color:var(--white);}
+#logo-name{font-size:22px;font-weight:900;color:var(--white);letter-spacing:1px;line-height:1;}
+#logo-name em{color:var(--green);font-style:normal;}
+#logo-sub{font-size:9px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-top:3px;}
+
+/* Goal input panel */
+#goal-panel{
+  flex:1;display:flex;align-items:center;
+  justify-content:center;gap:10px;
+  padding:0 20px;
+}
+.goal-input-wrap{display:flex;flex-direction:column;align-items:center;gap:5px;}
+.goal-input-lbl{font-size:9px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.3);text-transform:uppercase;}
+.goal-input-row{display:flex;gap:6px;align-items:center;}
+.ginput{
+  background:#111;border:1px solid rgba(255,255,255,0.12);
+  color:var(--white);font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;font-weight:600;padding:5px 8px;
+  outline:none;width:130px;
+}
+.ginput:focus{border-color:var(--green);}
+.ginput.small{width:68px;}
+.gbtn{
+  background:var(--green);color:var(--black);
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:900;letter-spacing:1px;
+  padding:5px 14px;cursor:pointer;border:none;text-transform:uppercase;
+}
+.gbtn:hover{background:#90FF30;}
+.gbtn.red{background:#ff3030;color:#fff;}
+.gbtn.red:hover{background:#ff5555;}
+.gdiv{width:1px;height:50px;background:rgba(255,255,255,0.07);margin:0 6px;}
+
+/* Score + Timer */
+#right-panel{
+  display:flex;align-items:center;gap:8px;
   flex-shrink:0;
 }
-#logo-circle img{width:100%;height:100%;object-fit:cover;display:block;}
-#logo-circle .logo-fb{
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-}
-#logo-circle .logo-fb span{
-  font-size:16px;font-weight:900;line-height:1.1;
-  color:var(--green);
-}
-#logo-circle .logo-fb span.w{color:var(--white);}
-#logo-texts{}
-#logo-name{
-  font-size:22px;font-weight:900;
-  color:var(--white);letter-spacing:1px;line-height:1;
-}
-#logo-name em{color:var(--green);font-style:normal;}
-#logo-sub{
-  font-size:9px;font-weight:700;
-  letter-spacing:3px;color:rgba(255,255,255,0.3);
-  text-transform:uppercase;margin-top:3px;
-}
+.sbtn{width:34px;height:34px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);color:white;font-size:20px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.sbtn:hover{background:rgba(255,255,255,0.15);}
+.sbtn.gn{border-color:var(--green);color:var(--green);}
+.sc-lbl{font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;padding:0 4px;text-align:center;}
 
 /* Timer */
-#timer-wrap{
-  display:flex;flex-direction:column;
-  align-items:center;gap:3px;
-}
-#timer-lbl{
-  font-size:9px;font-weight:700;
-  letter-spacing:4px;color:rgba(255,255,255,0.25);
-  text-transform:uppercase;
-}
-#timer-disp{
-  font-size:54px;font-weight:900;color:var(--white);
-  letter-spacing:5px;line-height:1;
-  font-variant-numeric:tabular-nums;
-}
-#timer-btns{display:flex;gap:7px;margin-top:3px;}
-.tbtn{
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.1);
-  color:var(--white);
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:1px;
-  padding:4px 13px;cursor:pointer;text-transform:uppercase;
-  transition:background 0.1s;
-}
+#timer-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;margin:0 10px;}
+#timer-lbl{font-size:9px;font-weight:700;letter-spacing:4px;color:rgba(255,255,255,0.25);text-transform:uppercase;}
+#timer-disp{font-size:52px;font-weight:900;color:var(--white);letter-spacing:4px;line-height:1;font-variant-numeric:tabular-nums;}
+#timer-btns{display:flex;gap:5px;margin-top:2px;}
+.tbtn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--white);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 10px;cursor:pointer;text-transform:uppercase;}
 .tbtn:hover{background:rgba(255,255,255,0.14);}
 .tbtn.g{background:var(--green);color:var(--black);border-color:var(--green);}
 .tbtn.g:hover{background:#90FF30;}
 .tbtn.red{background:#ff3030;color:#fff;border-color:#ff3030;}
 
-/* Score controls */
-#score-ctrl-wrap{
-  display:flex;align-items:center;gap:4px;flex-shrink:0;
-}
-.sbtn{
-  width:32px;height:32px;
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.1);
-  color:white;font-size:20px;font-weight:900;
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:background 0.1s;
-}
-.sbtn:hover{background:rgba(255,255,255,0.15);}
-.sbtn.gn{border-color:var(--green);color:var(--green);}
-.sc-label{
-  font-size:9px;font-weight:700;letter-spacing:2px;
-  color:rgba(255,255,255,0.2);text-transform:uppercase;
-  padding:0 8px;text-align:center;min-width:30px;
-}
+/* Time adjust */
+#time-adj{display:flex;gap:4px;margin-top:4px;}
+.tadj{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;padding:2px 8px;cursor:pointer;text-transform:uppercase;}
+.tadj:hover{background:rgba(255,255,255,0.12);color:white;}
 
-/* ══════════════════════════════
-   HALFTIME / FULLTIME POPUP
-══════════════════════════════ */
+/* ── POPUP ── */
 #popup{
-  position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  background:var(--black);
-  border:2px solid var(--green);
-  padding:22px 60px;text-align:center;
-  display:none;z-index:20;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:var(--black);border:2px solid var(--green);
+  padding:22px 60px;text-align:center;display:none;z-index:20;
 }
-.pop-lbl{
-  font-size:13px;font-weight:700;
-  letter-spacing:6px;color:var(--green);
-  text-transform:uppercase;
-}
-.pop-score{
-  font-size:76px;font-weight:900;
-  color:var(--white);line-height:1;margin-top:4px;
-}
-.pop-teams{
-  font-size:16px;font-weight:700;letter-spacing:3px;
-  color:rgba(255,255,255,0.4);text-transform:uppercase;
-  margin-top:4px;
-}
+.pop-lbl{font-size:13px;font-weight:700;letter-spacing:6px;color:var(--green);text-transform:uppercase;}
+.pop-score{font-size:76px;font-weight:900;color:var(--white);line-height:1;margin-top:4px;}
+.pop-teams{font-size:16px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.4);text-transform:uppercase;margin-top:4px;}
 </style>
 </head>
 <body>
@@ -320,7 +184,7 @@ html,body{
 
   <!-- TOP BAR -->
   <div id="topbar">
-    <div class="team-block" id="tbA">
+    <div class="team-block">
       <img class="flag-img" id="flagA" src="" alt="">
       <div class="team-name" id="tnA">—</div>
     </div>
@@ -330,9 +194,14 @@ html,body{
         <span class="ssep">–</span>
         <span class="snum" id="sB">0</span>
       </div>
-      <div id="period"><span class="ldot"></span><span id="ptext">KICK OFF</span></div>
+      <!-- Goal events under score -->
+      <div id="goal-events">
+        <div class="goal-side" id="gevA"></div>
+        <div class="goal-side" id="gevB"></div>
+      </div>
+      <div id="period-wrap"><span class="ldot"></span><span id="ptext">KICK OFF</span></div>
     </div>
-    <div class="team-block right" id="tbB">
+    <div class="team-block right">
       <img class="flag-img" id="flagB" src="" alt="">
       <div class="team-name" id="tnB">—</div>
     </div>
@@ -340,14 +209,12 @@ html,body{
 
   <!-- INFO STRIP -->
   <div id="infostrip">
-    <div class="info-side" id="sideA">
+    <div class="iside">
       <div class="form-tag" id="fmA">—</div>
-      <div class="scorer-list" id="scA"></div>
     </div>
-    <div class="info-divider" id="matchRound">—</div>
-    <div class="info-side right" id="sideB">
+    <div class="idivider" id="matchRound">—</div>
+    <div class="iside right">
       <div class="form-tag" id="fmB">—</div>
-      <div class="scorer-list" id="scB"></div>
     </div>
   </div>
 
@@ -355,21 +222,15 @@ html,body{
   <div id="lineup-wrap">
     <div class="lp" id="lpA">
       <img id="luImgA" src="" alt="" style="display:none">
-      <div class="lp-placeholder" id="luPhA">
-        <div class="ico">📋</div>
-        <div class="lptxt">Team A<br>Lineup</div>
-      </div>
+      <div class="lp-ph" id="luPhA"><div class="ico">📋</div><div class="lptxt">Team A<br>Lineup</div></div>
       <div class="lpb"></div>
-      <div class="lp-label" id="luLblA">Team A</div>
+      <div class="lp-lbl" id="luLblA">Team A</div>
     </div>
     <div class="lp" id="lpB">
       <img id="luImgB" src="" alt="" style="display:none">
-      <div class="lp-placeholder" id="luPhB">
-        <div class="ico">📋</div>
-        <div class="lptxt">Team B<br>Lineup</div>
-      </div>
+      <div class="lp-ph" id="luPhB"><div class="ico">📋</div><div class="lptxt">Team B<br>Lineup</div></div>
       <div class="lpb"></div>
-      <div class="lp-label" id="luLblB">Team B</div>
+      <div class="lp-lbl" id="luLblB">Team B</div>
     </div>
   </div>
 
@@ -386,41 +247,75 @@ html,body{
     <!-- Logo -->
     <div id="logo-wrap">
       <div id="logo-circle">
-        <img id="logoImg" src="" alt=""
-          onerror="this.style.display='none';document.getElementById('logoFb').style.display='flex'">
+        <img id="logoImg" src="" alt="" onerror="this.style.display='none';document.getElementById('logoFb').style.display='flex'">
         <div class="logo-fb" id="logoFb" style="display:none">
           <span>Doe</span><span class="w">Pha</span><span>Gyi</span>
         </div>
       </div>
-      <div id="logo-texts">
+      <div>
         <div id="logo-name">Doe<em>Pha</em>Gyi</div>
         <div id="logo-sub">Football Predictions & Tips</div>
       </div>
     </div>
 
-    <!-- Score A / Timer / Score B -->
-    <div id="score-ctrl-wrap">
-      <!-- Team A score -->
-      <button class="sbtn gn" onclick="chScore('A',1)">+</button>
-      <button class="sbtn"    onclick="chScore('A',-1)">−</button>
-      <div class="sc-label" id="sclA">A</div>
-    </div>
+    <!-- Goal Input Panel -->
+    <div id="goal-panel">
+      <!-- Team A goal -->
+      <div class="goal-input-wrap">
+        <div class="goal-input-lbl" id="goalLblA">Team A Goal</div>
+        <div class="goal-input-row">
+          <input class="ginput" id="giNameA" type="text" placeholder="Player name">
+          <input class="ginput small" id="giMinA" type="text" placeholder="45'">
+          <button class="gbtn" onclick="addGoal('A')">⚽ Goal</button>
+          <button class="gbtn red" onclick="removeGoal('A')">✕</button>
+        </div>
+      </div>
 
-    <div id="timer-wrap">
-      <div id="timer-lbl">Match Time</div>
-      <div id="timer-disp">00:00</div>
-      <div id="timer-btns">
-        <button class="tbtn g"   id="btnS"  onclick="startTimer()">Start</button>
-        <button class="tbtn"             onclick="pauseTimer()">Pause</button>
-        <button class="tbtn"             onclick="resetTimer()">Reset</button>
-        <button class="tbtn"             onclick="showPopup('HT')">HT</button>
-        <button class="tbtn red"         onclick="showPopup('FT')">FT</button>
+      <div class="gdiv"></div>
+
+      <!-- Team B goal -->
+      <div class="goal-input-wrap">
+        <div class="goal-input-lbl" id="goalLblB">Team B Goal</div>
+        <div class="goal-input-row">
+          <input class="ginput" id="giNameB" type="text" placeholder="Player name">
+          <input class="ginput small" id="giMinB" type="text" placeholder="45'">
+          <button class="gbtn" onclick="addGoal('B')">⚽ Goal</button>
+          <button class="gbtn red" onclick="removeGoal('B')">✕</button>
+        </div>
       </div>
     </div>
 
-    <div id="score-ctrl-wrap" style="margin-left:0">
-      <div class="sc-label" id="sclB">B</div>
-      <button class="sbtn"    onclick="chScore('B',-1)">−</button>
+    <!-- Score + Timer -->
+    <div id="right-panel">
+      <!-- Score A -->
+      <button class="sbtn gn" onclick="chScore('A',1)">+</button>
+      <button class="sbtn" onclick="chScore('A',-1)">−</button>
+      <div class="sc-lbl" id="sclA">A</div>
+
+      <!-- Timer -->
+      <div id="timer-wrap">
+        <div id="timer-lbl">Match Time</div>
+        <div id="timer-disp">00:00</div>
+        <div id="timer-btns">
+          <button class="tbtn g" id="btnS" onclick="startTimer()">Start</button>
+          <button class="tbtn" onclick="pauseTimer()">Pause</button>
+          <button class="tbtn" onclick="resetTimer()">Reset</button>
+          <button class="tbtn" onclick="showPopup('HT')">HT</button>
+          <button class="tbtn red" onclick="showPopup('FT')">FT</button>
+        </div>
+        <!-- Time adjust -->
+        <div id="time-adj">
+          <button class="tadj" onclick="adjTime(-60)">−1m</button>
+          <button class="tadj" onclick="adjTime(-10)">−10s</button>
+          <button class="tadj" onclick="adjTime(10)">+10s</button>
+          <button class="tadj" onclick="adjTime(60)">+1m</button>
+          <button class="tadj" onclick="adjTime(300)">+5m</button>
+        </div>
+      </div>
+
+      <!-- Score B -->
+      <div class="sc-lbl" id="sclB">B</div>
+      <button class="sbtn" onclick="chScore('B',-1)">−</button>
       <button class="sbtn gn" onclick="chScore('B',1)">+</button>
     </div>
 
@@ -437,128 +332,123 @@ html,body{
 
 <script src="config.js"></script>
 <script>
-// ── LOAD CONFIG ──────────────────────────────────────────────
+// ── INIT ─────────────────────────────────────────────────────
 function init(){
-  const A = CONFIG.teamA, B = CONFIG.teamB;
+  const A=CONFIG.teamA, B=CONFIG.teamB;
+  document.getElementById('tnA').textContent      = A.name;
+  document.getElementById('tnB').textContent      = B.name;
+  document.getElementById('fmA').textContent      = A.formation;
+  document.getElementById('fmB').textContent      = B.formation;
+  document.getElementById('sclA').textContent     = A.shortName||A.name.slice(0,3).toUpperCase();
+  document.getElementById('sclB').textContent     = B.shortName||B.name.slice(0,3).toUpperCase();
+  document.getElementById('goalLblA').textContent = (A.shortName||A.name)+' Goal';
+  document.getElementById('goalLblB').textContent = (B.shortName||B.name)+' Goal';
+  document.getElementById('luLblA').textContent   = A.shortName||A.name;
+  document.getElementById('luLblB').textContent   = B.shortName||B.name;
+  document.getElementById('matchRound').textContent = CONFIG.matchRound||CONFIG.matchTitle;
+  document.getElementById('pop-teams').textContent  =
+    (A.shortName||A.name)+'  vs  '+(B.shortName||B.name);
 
-  // Team names
-  document.getElementById('tnA').textContent = A.name;
-  document.getElementById('tnB').textContent = B.name;
-  document.getElementById('sclA').textContent = A.shortName || A.name.substring(0,3).toUpperCase();
-  document.getElementById('sclB').textContent = B.shortName || B.name.substring(0,3).toUpperCase();
+  setImg('flagA',  A.flagFile);
+  setImg('flagB',  B.flagFile);
+  setImg('logoImg',CONFIG.logoFile);
+  setLineup('A', A.lineupFile);
+  setLineup('B', B.lineupFile);
 
-  // Flags
-  setImg('flagA', A.flagFile);
-  setImg('flagB', B.flagFile);
+  // Pre-load goals from config
+  (CONFIG.goalsA||[]).forEach(g=>{ const p=g.split(' '); const min=p.pop(); addGoalDirect('A',p.join(' '),min); });
+  (CONFIG.goalsB||[]).forEach(g=>{ const p=g.split(' '); const min=p.pop(); addGoalDirect('B',p.join(' '),min); });
 
-  // Formation
-  document.getElementById('fmA').textContent = A.formation;
-  document.getElementById('fmB').textContent = B.formation;
-
-  // Lineup photos
-  setLineup('A', A.lineupFile, A.name);
-  setLineup('B', B.lineupFile, B.name);
-
-  // Lineup labels
-  document.getElementById('luLblA').textContent = A.shortName || A.name;
-  document.getElementById('luLblB').textContent = B.shortName || B.name;
-
-  // Logo
-  const li = document.getElementById('logoImg');
-  li.src = CONFIG.logoFile;
-
-  // Match round
-  document.getElementById('matchRound').textContent = CONFIG.matchRound || CONFIG.matchTitle;
-
-  // Scorers
-  renderScorers();
-
-  // Score override from config
-  sa = CONFIG.scoreA || 0;
-  sb = CONFIG.scoreB || 0;
-  updateScore();
-
-  // Popup teams
-  document.getElementById('pop-teams').textContent =
-    (A.shortName||A.name) + '  vs  ' + (B.shortName||B.name);
+  sa=CONFIG.scoreA||0; sb=CONFIG.scoreB||0; updateScore();
 }
 
-function setImg(id, src){
-  const el = document.getElementById(id);
-  if(src){ el.src = src; }
-}
-
-function setLineup(t, src, name){
+function setImg(id,src){ if(src){ const el=document.getElementById(id); if(el) el.src=src; } }
+function setLineup(t,src){
   if(!src) return;
-  const img = document.getElementById('luImg'+t);
-  const ph  = document.getElementById('luPh'+t);
-  img.src = src;
-  img.style.display = 'block';
-  ph.style.display  = 'none';
-  img.onerror = ()=>{ img.style.display='none'; ph.style.display='flex'; };
-}
-
-function renderScorers(){
-  ['A','B'].forEach(t=>{
-    const goals = CONFIG['goals'+t] || [];
-    const el = document.getElementById('sc'+t);
-    el.innerHTML = goals.map(g=>`<span class="scorer-item">${g}</span>`).join('');
-  });
+  const img=document.getElementById('luImg'+t);
+  const ph=document.getElementById('luPh'+t);
+  img.src=src; img.style.display='block'; ph.style.display='none';
+  img.onerror=()=>{ img.style.display='none'; ph.style.display='flex'; };
 }
 
 // ── SCORE ────────────────────────────────────────────────────
 let sa=0, sb=0;
-function chScore(t, d){
-  if(t==='A') sa = Math.max(0, sa+d);
-  else         sb = Math.max(0, sb+d);
+function chScore(t,d){
+  if(t==='A') sa=Math.max(0,sa+d);
+  else sb=Math.max(0,sb+d);
   updateScore();
 }
 function updateScore(){
-  document.getElementById('sA').textContent = sa;
-  document.getElementById('sB').textContent = sb;
-  document.getElementById('pop-score').textContent = sa + ' – ' + sb;
+  document.getElementById('sA').textContent=sa;
+  document.getElementById('sB').textContent=sb;
+  document.getElementById('pop-score').textContent=sa+' – '+sb;
 }
 
-// ── TIMER ─────────────────────────────────────────────────────
-let secs=0, iv=null, running=false;
-function pad(n){ return String(n).padStart(2,'0'); }
+// ── GOALS ────────────────────────────────────────────────────
+const goals={A:[],B:[]};
 
+function addGoal(t){
+  const name=document.getElementById('giName'+t).value.trim();
+  const min =document.getElementById('giMin'+t).value.trim();
+  if(!name) return;
+  const label = min ? name+' '+min : name;
+  goals[t].push(label);
+  sa = t==='A' ? sa+1 : sa;
+  sb = t==='B' ? sb+1 : sb;
+  document.getElementById('giName'+t).value='';
+  document.getElementById('giMin'+t).value='';
+  renderGoals(); updateScore();
+}
+
+function addGoalDirect(t,name,min){
+  const label=min?name+' '+min:name;
+  goals[t].push(label);
+}
+
+function removeGoal(t){
+  if(goals[t].length===0) return;
+  goals[t].pop();
+  if(t==='A') sa=Math.max(0,sa-1);
+  else sb=Math.max(0,sb-1);
+  renderGoals(); updateScore();
+}
+
+function renderGoals(){
+  ['A','B'].forEach(t=>{
+    const el=document.getElementById('gev'+t);
+    el.innerHTML=goals[t].map(g=>`<span class="gevt">${g}</span>`).join('');
+  });
+}
+
+// ── TIMER ────────────────────────────────────────────────────
+let secs=0,iv=null,running=false;
+function pad(n){return String(n).padStart(2,'0');}
 function updateTimerDisplay(){
-  const m = Math.floor(secs/60), s = secs%60;
-  document.getElementById('timer-disp').textContent = pad(m)+':'+pad(s);
-  // Period label
+  document.getElementById('timer-disp').textContent=pad(Math.floor(secs/60))+':'+pad(secs%60);
   let p;
-  if(secs===0)       p='KICK OFF';
-  else if(secs<=2700) p='1ST HALF';   // 0–45min
-  else if(secs<=2760) p='HALF TIME';  // HT
-  else if(secs<=5400) p='2ND HALF';   // 45–90min
+  if(secs===0)        p='KICK OFF';
+  else if(secs<=2700) p='1ST HALF';
+  else if(secs<=2760) p='HALF TIME';
+  else if(secs<=5400) p='2ND HALF';
   else                p='FULL TIME';
-  document.getElementById('ptext').textContent = p;
+  document.getElementById('ptext').textContent=p;
 }
-
-function startTimer(){
-  if(running) return;
-  running=true;
-  iv=setInterval(()=>{ secs++; updateTimerDisplay(); },1000);
-  document.getElementById('btnS').textContent='Running';
-}
+function startTimer(){ if(running)return; running=true; iv=setInterval(()=>{secs++;updateTimerDisplay();},1000); document.getElementById('btnS').textContent='Running'; }
 function pauseTimer(){ clearInterval(iv); running=false; document.getElementById('btnS').textContent='Resume'; }
 function resetTimer(){ clearInterval(iv); running=false; secs=0; updateTimerDisplay(); document.getElementById('btnS').textContent='Start'; hidePopup(); }
+function adjTime(s){ secs=Math.max(0,secs+s); updateTimerDisplay(); }
 
-// ── POPUP ─────────────────────────────────────────────────────
+// ── POPUP ────────────────────────────────────────────────────
 function showPopup(type){
   pauseTimer();
-  const lbl = type==='HT' ? 'HALF TIME' : 'FULL TIME';
-  document.getElementById('pop-lbl').textContent = lbl;
-  const p = document.getElementById('popup');
+  document.getElementById('pop-lbl').textContent = type==='HT'?'HALF TIME':'FULL TIME';
+  const p=document.getElementById('popup');
   p.style.display='flex'; p.style.flexDirection='column';
-  // Auto hide after 10s
-  setTimeout(hidePopup, 10000);
+  setTimeout(hidePopup,10000);
 }
 function hidePopup(){ document.getElementById('popup').style.display='none'; }
 
-// ── INIT ──────────────────────────────────────────────────────
-window.onload = init;
+window.onload=init;
 </script>
 </body>
 </html>
